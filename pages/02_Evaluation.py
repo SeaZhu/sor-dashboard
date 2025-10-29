@@ -32,7 +32,11 @@ st.markdown(
     """
 )
 
-st.plotly_chart(plot_weighted_scores(filtered_scores), config=PLOTLY_CONFIG, width="stretch")
+st.plotly_chart(
+    plot_weighted_scores(filtered_scores),
+    config=PLOTLY_CONFIG,
+    use_container_width=True,
+)
 
 st.markdown("### Classification Summary")
 summary = filtered_scores.groupby("Classification").agg(
