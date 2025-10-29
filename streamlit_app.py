@@ -12,11 +12,11 @@ st.set_page_config(
 navigation = st.navigation(
     {
         "": [
-            st.Page("pages/01_Overview.py", "Overview", icon="📊"),
-            st.Page("pages/02_Evaluation.py", "Evaluation", icon="🧮"),
-            st.Page("pages/03_PCA.py", "PCA", icon="🧭"),
-            st.Page("pages/04_Validation.py", "Validation", icon="✅"),
-            st.Page("pages/05_Conclusion.py", "Conclusion", icon="📝"),
+            st.Page(page="pages/01_Overview.py", title="Overview", icon="📊"),
+            st.Page(page="pages/02_Evaluation.py", title="Evaluation", icon="🧮"),
+            st.Page(page="pages/03_PCA.py", title="PCA", icon="🧭"),
+            st.Page(page="pages/04_Validation.py", title="Validation", icon="✅"),
+            st.Page(page="pages/05_Conclusion.py", title="Conclusion", icon="📝"),
         ]
     }
 )

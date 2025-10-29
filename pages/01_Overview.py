@@ -49,7 +49,7 @@ st.markdown("### Correlation Heatmap")
 st.plotly_chart(
     plot_correlation_heatmap(df, NUMERIC_COLUMNS),
     config=PLOTLY_CONFIG,
-    use_container_width=True,
+    width="stretch",
 )
 
 st.markdown("### Filtered Preview")

@@ -35,7 +35,7 @@ st.markdown(
 st.plotly_chart(
     plot_weighted_scores(filtered_scores),
     config=PLOTLY_CONFIG,
-    use_container_width=True,
+    width="stretch",
 )
 
 st.markdown("### Classification Summary")

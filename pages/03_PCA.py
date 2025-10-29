@@ -41,7 +41,7 @@ st.markdown(
 st.plotly_chart(
     plot_scree(pca),
     config=PLOTLY_CONFIG,
-    use_container_width=True,
+    width="stretch",
 )
 
 st.markdown("### Biplot (PC1 vs PC2)")
@@ -52,7 +52,7 @@ else:
     st.plotly_chart(
         plot_biplot(filtered_pcs, pca, df.loc[filtered_indices], NUMERIC_COLUMNS),
         config=PLOTLY_CONFIG,
-        use_container_width=True,
+        width="stretch",
     )
 
 explained = pd.DataFrame(
