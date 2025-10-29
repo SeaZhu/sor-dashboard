@@ -256,16 +256,17 @@ def render_overview(df: pd.DataFrame, numeric_columns: list[str], filtered: pd.D
             "Type": [df[col].dtype for col in df.columns],
         }
     )
-    st.dataframe(info_columns, use_container_width=True)
+    info_columns["Type"] = info_columns["Type"].astype(str)
+    st.dataframe(info_columns, width="stretch")
 
     st.markdown("### Summary Statistics")
-    st.dataframe(df[numeric_columns].describe().T, use_container_width=True)
+    st.dataframe(df[numeric_columns].describe().T, width="stretch")
 
     st.markdown("### Correlation Heatmap")
-    st.plotly_chart(plot_correlation_heatmap(df, numeric_columns), use_container_width=True)
+    st.plotly_chart(plot_correlation_heatmap(df, numeric_columns), width="stretch")
 
     st.markdown("### Filtered Preview")
-    st.dataframe(filtered, use_container_width=True)
+    st.dataframe(filtered, width="stretch")
 
 
 def render_evaluation(slide_scores: pd.DataFrame, filtered: pd.DataFrame) -> None:
@@ -277,17 +278,17 @@ def render_evaluation(slide_scores: pd.DataFrame, filtered: pd.DataFrame) -> Non
         """
     )
 
-    st.plotly_chart(plot_weighted_scores(filtered), use_container_width=True)
+    st.plotly_chart(plot_weighted_scores(filtered), width="stretch")
 
     st.markdown("### Classification Summary")
     summary = slide_scores.groupby("Classification").agg(
         Objectives=("SOR_ID", "count"),
         Average_Score=("Weighted.Score", "mean"),
     )
-    st.dataframe(summary, use_container_width=True)
+    st.dataframe(summary, width="stretch")
 
     st.markdown("### Detailed Results")
-    st.dataframe(filtered, use_container_width=True)
+    st.dataframe(filtered, width="stretch")
 
     csv_buffer = io.StringIO()
     slide_scores.to_csv(csv_buffer, index=False)
@@ -308,11 +309,11 @@ def render_pca(df: pd.DataFrame, numeric_columns: list[str], pcs_df: pd.DataFram
         """
     )
 
-    st.plotly_chart(plot_scree(pca), use_container_width=True)
+    st.plotly_chart(plot_scree(pca), width="stretch")
 
     st.markdown("### Biplot (PC1 vs PC2)")
     filtered_pcs = pcs_df.loc[filtered_idx]
-    st.plotly_chart(plot_biplot(filtered_pcs, pca, df.loc[filtered_idx], numeric_columns), use_container_width=True)
+    st.plotly_chart(plot_biplot(filtered_pcs, pca, df.loc[filtered_idx], numeric_columns), width="stretch")
 
     explained = pd.DataFrame(
         {
@@ -321,7 +322,7 @@ def render_pca(df: pd.DataFrame, numeric_columns: list[str], pcs_df: pd.DataFram
         }
     )
     st.markdown("### Explained Variance Table")
-    st.dataframe(explained, use_container_width=True)
+    st.dataframe(explained, width="stretch")
 
     loadings = pd.DataFrame(
         pca.components_.T,
@@ -329,7 +330,7 @@ def render_pca(df: pd.DataFrame, numeric_columns: list[str], pcs_df: pd.DataFram
         columns=[f"PC{i + 1}" for i in range(len(pca.components_))],
     )
     st.markdown("### Component Loadings")
-    st.dataframe(loadings, use_container_width=True)
+    st.dataframe(loadings, width="stretch")
 
 
 def render_validation(slide_scores: pd.DataFrame, equal_scores: pd.DataFrame, pcs_df: pd.DataFrame) -> None:
@@ -343,7 +344,7 @@ def render_validation(slide_scores: pd.DataFrame, equal_scores: pd.DataFrame, pc
 
     comparison = weight_summary_table(slide_scores, equal_scores)
     st.markdown("### Classification Comparison")
-    st.dataframe(comparison, use_container_width=True)
+    st.dataframe(comparison, width="stretch")
 
     changed_count = (comparison["Changed"] == "Yes").sum()
     st.metric("Objectives with Different Classification", changed_count)
@@ -352,7 +353,7 @@ def render_validation(slide_scores: pd.DataFrame, equal_scores: pd.DataFrame, pc
     st.metric("Correlation between Weighted Score and PC1", f"{correlation:.2f}")
 
     st.markdown("### Equal Weight Results")
-    st.dataframe(equal_scores, use_container_width=True)
+    st.dataframe(equal_scores, width="stretch")
 
 
 def render_conclusion(slide_scores: pd.DataFrame, pcs_df: pd.DataFrame) -> None:
@@ -375,10 +376,10 @@ def render_conclusion(slide_scores: pd.DataFrame, pcs_df: pd.DataFrame) -> None:
     )
 
     st.markdown("### Top Performing Objectives")
-    st.dataframe(top_objectives, use_container_width=True)
+    st.dataframe(top_objectives, width="stretch")
 
     st.markdown("### Improvement Priorities")
-    st.dataframe(low_objectives, use_container_width=True)
+    st.dataframe(low_objectives, width="stretch")
 
     st.markdown(
         """
