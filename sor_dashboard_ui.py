@@ -15,13 +15,12 @@ def classification_filter(slide_scores):
         st.sidebar.info("No classification data available; showing all objectives.")
         return slide_scores, available_classes
 
-    if FILTER_STATE_KEY not in st.session_state:
-        st.session_state[FILTER_STATE_KEY] = available_classes
+    default_selection = st.session_state.get(FILTER_STATE_KEY, available_classes)
 
     selection = st.sidebar.multiselect(
         "Select categories",
         options=available_classes,
-        default=st.session_state[FILTER_STATE_KEY],
+        default=default_selection,
         key=FILTER_STATE_KEY,
     )
 
@@ -29,6 +28,5 @@ def classification_filter(slide_scores):
         st.sidebar.info("No categories selected; showing all objectives.")
         selection = available_classes
 
-    st.session_state[FILTER_STATE_KEY] = selection
     filtered_scores = slide_scores[slide_scores["Classification"].isin(selection)]
     return filtered_scores, selection
