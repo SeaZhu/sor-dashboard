@@ -253,10 +253,10 @@ def render_overview(df: pd.DataFrame, numeric_columns: list[str], filtered: pd.D
     info_columns = pd.DataFrame(
         {
             "Column": df.columns,
-            "Type": [df[col].dtype for col in df.columns],
+            "Type": pd.Series([df[col].dtype for col in df.columns], dtype="string"),
         }
     )
-    info_columns["Type"] = info_columns["Type"].astype(str)
+    info_columns["Column"] = info_columns["Column"].astype("string")
     st.dataframe(info_columns, width="stretch")
 
     st.markdown("### Summary Statistics")
