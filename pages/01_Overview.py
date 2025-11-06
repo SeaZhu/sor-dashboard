@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pandas as pd
 import streamlit as st
 
 from sor_dashboard_core import (
@@ -25,22 +24,6 @@ df = load_dataset()
 slide_scores = compute_weighted_scores(df, SLIDE_WEIGHTS)
 
 filtered_scores, _ = classification_filter(slide_scores)
-
-st.subheader("Dataset Summary")
-st.markdown(
-    """
-    The dataset covers strategic objectives across multiple organizational support areas. Scores range from 0 (low performance)
-    to 10 (high performance) for each criterion.
-    """
-)
-
-info_columns = pd.DataFrame(
-    {
-        "Column": pd.Series(df.columns, dtype="string"),
-        "Type": pd.Series([df[col].dtype for col in df.columns], dtype="string"),
-    }
-)
-st.dataframe(info_columns, width="stretch")
 
 st.markdown("### Summary Statistics")
 st.dataframe(df[NUMERIC_COLUMNS].describe().T, width="stretch")

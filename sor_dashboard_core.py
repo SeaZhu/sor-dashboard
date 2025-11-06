@@ -181,6 +181,35 @@ def plot_scree(pca: PCA) -> go.Figure:
     return fig
 
 
+def plot_variable_contributions(
+    pca: PCA,
+    numeric_columns: Iterable[str],
+    components: int = 2,
+) -> go.Figure:
+    numeric_columns = list(numeric_columns)
+    component_count = min(components, pca.components_.shape[0])
+    pc_labels = [f"PC{i + 1}" for i in range(component_count)]
+    contributions = (pca.components_[:component_count] ** 2)
+    contributions = contributions / contributions.sum(axis=1, keepdims=True)
+    contribution_df = pd.DataFrame(contributions.T, index=numeric_columns, columns=pc_labels)
+    contribution_df = contribution_df.reset_index(names="Dimension")
+    tidy = contribution_df.melt(
+        id_vars="Dimension",
+        var_name="Component",
+        value_name="Contribution",
+    )
+    fig = px.bar(
+        tidy,
+        x="Dimension",
+        y="Contribution",
+        color="Component",
+        barmode="group",
+        labels={"Dimension": "Department", "Contribution": "Relative Influence"},
+    )
+    fig.update_layout(margin=dict(l=0, r=0, t=40, b=0))
+    return fig
+
+
 def plot_biplot(
     pcs_df: pd.DataFrame,
     pca: PCA,

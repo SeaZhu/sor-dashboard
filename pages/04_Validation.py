@@ -29,31 +29,33 @@ pcs_df, _, _ = prepare_pca(df, NUMERIC_COLUMNS)
 
 filtered_scores, selection = classification_filter(slide_scores)
 filtered_ids = filtered_scores.index
-filtered_equal = equal_scores.loc[filtered_ids]
 filtered_pcs = pcs_df.loc[filtered_ids]
 
 comparison = weight_summary_table(slide_scores, equal_scores)
 comparison = comparison[comparison["SOR_ID"].isin(filtered_scores["SOR_ID"])]
 
 st.subheader("Sensitivity & Consistency Checks")
-st.markdown(
-    """
-    This section contrasts the prescribed slide weights with an equal-weight scenario to gauge sensitivity. It also reports
-    the correlation between the weighted composite score and the first principal component (PC1).
-    """
-)
+
+total_objectives = len(filtered_scores)
+if total_objectives:
+    changed_count = (comparison["Changed"] == "Yes").sum()
+    consistency_pct = 1 - changed_count / total_objectives
+    if total_objectives > 1:
+        correlation = float(np.corrcoef(filtered_scores["Weighted.Score"], filtered_pcs["PC1"])[0, 1])
+        correlation_text = f"{correlation:.2f}"
+    else:
+        correlation_text = "N/A"
+    st.markdown(
+        "\n".join(
+            [
+                f"**Filtered objectives:** {total_objectives}",
+                f"* Equal-weight classifications align {consistency_pct:.0%} of the time.",
+                f"* Weighted score vs. PC1 correlation: {correlation_text}.",
+            ]
+        )
+    )
+else:
+    st.info("No objectives match the current selection for validation analysis.")
 
 st.markdown("### Classification Comparison")
 st.dataframe(comparison, width="stretch")
-
-changed_count = (comparison["Changed"] == "Yes").sum()
-st.metric("Objectives with Different Classification", changed_count)
-
-if len(filtered_scores) > 1:
-    correlation = float(np.corrcoef(filtered_scores["Weighted.Score"], filtered_pcs["PC1"])[0, 1])
-    st.metric("Correlation between Weighted Score and PC1", f"{correlation:.2f}")
-else:
-    st.metric("Correlation between Weighted Score and PC1", "N/A")
-
-st.markdown("### Equal Weight Results")
-st.dataframe(filtered_equal, width="stretch")
