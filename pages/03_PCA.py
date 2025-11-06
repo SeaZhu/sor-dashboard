@@ -12,6 +12,7 @@ from sor_dashboard_core import (
     load_dataset,
     plot_biplot,
     plot_scree,
+    plot_variable_contributions,
     prepare_pca,
 )
 from sor_dashboard_ui import classification_filter
@@ -55,15 +56,6 @@ else:
         width="stretch",
     )
 
-explained = pd.DataFrame(
-    {
-        "Principal Component": [f"PC{i + 1}" for i in range(len(pca.explained_variance_ratio_))],
-        "Explained Variance": pca.explained_variance_ratio_,
-    }
-)
-st.markdown("### Explained Variance Table")
-st.dataframe(explained, width="stretch")
-
 loadings = pd.DataFrame(
     pca.components_.T,
     index=NUMERIC_COLUMNS,
@@ -71,3 +63,10 @@ loadings = pd.DataFrame(
 )
 st.markdown("### Component Loadings")
 st.dataframe(loadings, width="stretch")
+
+st.markdown("### Variable Contributions Bar Chart")
+st.plotly_chart(
+    plot_variable_contributions(pca, NUMERIC_COLUMNS),
+    config=PLOTLY_CONFIG,
+    use_container_width=True,
+)
