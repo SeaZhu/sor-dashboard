@@ -39,13 +39,3 @@ low_objectives = slide_scores.nsmallest(3, "Weighted.Score")[
     ["SOR_ID", "Goal", "Obj", "Weighted.Score", "Classification"]
 ]
 st.dataframe(low_objectives, width="stretch")
-
-st.markdown(
-    """
-    **Next Steps**
-
-    * Engage objective owners for targeted action planning around low-scoring criteria.
-    * Monitor medium-tier objectives for trend shifts and reassess weights quarterly.
-    * Incorporate qualitative feedback alongside the quantitative dashboard for a balanced review.
-    """
-)
